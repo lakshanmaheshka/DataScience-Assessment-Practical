@@ -1,0 +1,33 @@
+// importing mongodb libraries
+const {MongoClient, ObjectID} = require('mongodb')
+
+const connection_url = "mongodb://127.0.0.1:27017"
+const databaseName = 'climateChange'
+
+MongoClient.connect(
+    connection_url,
+    { useUnifiedTopology: true },
+    (error, client) => {
+        if (error) {
+            return console.log("Unable to connect database!")
+        }
+        const db =  client.db(databaseName)
+        //console.log("Database Successfully Connected!")
+
+        db.collection('CarFuelAndEmissions').find({$and:[{year:'2013'},{manufacturer:'Volvo'}]}).toArray(
+            (error, CarFuelAndEmissions) => {
+                // console.log(CO2EmissionFromNaturalGas)
+                CarFuelAndEmissions.slice(20).forEach(function(CarFuelAndEmissions){
+                    console.log("Year         : " +CarFuelAndEmissions.year)
+                    console.log("Manufacturer : " +CarFuelAndEmissions.manufacturer)
+                    console.log("Model        : " +CarFuelAndEmissions.model)
+                    console.log("Description  : " +CarFuelAndEmissions.description)
+                    console.log("Fuel Type    : " +CarFuelAndEmissions.fuel_type)
+                    console.log("CO2 Emission : " +CarFuelAndEmissions.co2_emissions)
+                    console.log("================================================")
+                })
+
+            }
+        )
+    }
+)
